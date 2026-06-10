@@ -1,0 +1,5 @@
+# Backups
+*.old
+
+# OS files
+.DS_Store
