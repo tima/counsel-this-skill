@@ -47,11 +47,13 @@ Council-this is a HIGH-STAKES POWER TOOL for decisions with genuine trade-offs. 
 ### Examples
 
 ```
-/council-this Should we adopt microservices for our monolithic app with 12 engineers, 50k users growing 20% MoM, 6-month migration window, and $200k budget?
+/council-this Should we adopt microservices for our monolithic app with 12 engineers, 50k users growing 20% MoM?
 
-/council-this What's our hiring strategy for scaling engineering from 8 to 20 people over the next year?
+/council-this What's our hiring strategy for scaling engineering from 8 to 20 people?
 
-/council-this How should we prioritize technical debt vs new features given our upcoming Series A and product-market fit validation phase?
+/council-this --quick Should we refactor the auth module now or defer to next quarter?
+
+/council-this --type=strategic How should we prioritize technical debt vs new features for Series A?
 ```
 
 ---
@@ -84,12 +86,20 @@ Classifies question type to weight perspectives appropriately:
 
 ### 3. Context Validation (Step 2)
 
-Checks for required context by question type (who/what/when/why/how):
-- 0-2 items: REFUSE, require clarification
-- 3-4 items: WARN, proceed with caveats
-- 5 items: FULL CONFIDENCE
+Checks for required context by question type (3 of 4 core items needed):
+- Technical: problem, scale, team expertise, integration
+- Strategic: business state, resources, success criteria, constraints
+- Process: current state, pain points, team structure, metrics
+- Timeline is helpful but optional (not required)
 
-### 4. Spawn 5 Council Members (Step 3)
+### 4. Spawn Council Members (Step 3)
+
+**Full mode (default):** 5 agents (Researcher, Sceptic, Strategist, Operator, Creative)
+
+**Quick mode (--quick):** 3 agents by question type:
+- Technical: Operator + Researcher + Sceptic
+- Strategic: Strategist + Researcher + Operator
+- Process: Operator + Strategist + Creative
 
 Launches 5 agents in parallel with question-type-specific prompts:
 
@@ -103,25 +113,17 @@ Each provides:
 - VERDICT (1-2 sentences)
 - ANALYSIS (3 specific points)
 
+Each agent has strict role boundaries to prevent redundant output.
+
 ### 5. Validate Output (Step 4)
 
-**Fail-fast validation:**
-- All 5 agents must provide valid VERDICT + 3-point ANALYSIS
-- If ANY agent fails format check → council ABORTS with specific error
+**Fuzzy validation** (accepts format variations):
+- Verdict: "VERDICT:", "Conclusion:", "Assessment:", etc
+- Analysis: numbered, bulleted, or plain paragraphs
+- If ANY agent fails → council ABORTS with specific error
 - No partial output, no best-effort
 
-### 6. Cross-Examination (Step 5)
-
-Replaces peer review theater with adversarial challenges:
-- Sceptic challenges Researcher
-- Operator challenges Strategist
-- Researcher challenges Creative
-- Strategist challenges Operator
-- Creative challenges Sceptic
-
-Each responds to direct challenge (2-3 sentences).
-
-### 7. Chairman Synthesis (Step 6)
+### 6. Chairman Synthesis (Step 5)
 
 Applies decision rubric:
 - Weights perspectives by question type
@@ -137,14 +139,13 @@ Applies decision rubric:
 - Success criteria
 - Reversal conditions
 
-### 8. Generate Report (Steps 7-10)
+### 7. Generate Report (Steps 6-9)
 
 Produces markdown report with:
 - Question, date, type, context score
 - BLUF
-- Chairman's synthesis
-- 5 council member perspectives (with cross-examination)
-- Cross-examination summary
+- Chairman's synthesis (validated for completeness)
+- Council member perspectives (5 or 3 depending on mode)
 - Metadata footer (provider, model, timestamp)
 
 **Filename:** `council-<descriptive-slug>-<YYYY-MM-DD>.md`
@@ -173,7 +174,7 @@ Produces markdown report with:
 [Question type, stakes level, context completeness]
 
 ### Key Tensions
-[2-3 primary tensions from cross-examination]
+[2-3 primary tensions between perspectives]
 
 ### Options Analysis
 [2-3 options with supporting agents, strengths, risks, confidence]
@@ -187,12 +188,8 @@ Produces markdown report with:
 
 ## Council Member Perspectives
 
-[5 sections: Researcher, Sceptic, Strategist, Operator, Creative]
-[Each with: Role, Weight, Verdict, 3-point Analysis, Challenge response]
-
-## Cross-Examination Summary
-
-[Key tensions, agreements, unresolved contradictions]
+[5 or 3 sections depending on mode: Researcher, Sceptic, Strategist, Operator, Creative]
+[Each with: Role, Weight, Verdict, 3-point Analysis]
 
 ---
 
@@ -240,7 +237,6 @@ This skill was built following TDD methodology from the writing-skills disciplin
 - "When NOT to Use" as primary focus (5 anti-patterns)
 - Step 0 stops execution if anti-pattern detected
 - Context validation with fail-fast
-- Cross-examination replaces peer review
 - Chairman synthesis with decision rubric
 - Result: 100% compliance (4/4 scenarios)
 
@@ -266,16 +262,16 @@ Council-this is designed to feel like a power tool for exceptional cases, not a 
 
 1. **Description emphasis:** "HIGH-STAKES... SKIP for obvious choices, low-stakes, emergencies"
 2. **Step 0 anti-pattern detection:** Stops execution before spawning agents
-3. **Explicit time costs:** 30-45 minute analysis clearly stated
+3. **No arbitrary figures:** Removed specific time/dollar thresholds, use qualitative descriptions
 4. **When NOT to Use prominence:** Anti-patterns listed first
 5. **Baseline judgment reinforcement:** "Your baseline judgment is already correct"
 
 ### Preventing Theater
 
-**Peer review replaced with cross-examination:**
-- Original design: Present anonymized summaries to same 5 agents (theater)
-- New design: Adversarial challenge pairs with specific questions
-- Result: Real tensions surface, not artificial consensus
+**Agent role boundaries:**
+- Each agent has strict lane (Researcher: ONLY evidence, Sceptic: ONLY risks, etc)
+- Prevents redundant output between agents
+- Explicit "DO NOT" statements enforce uniqueness
 
 **Fail-fast validation:**
 - Original design: Best-effort synthesis with partial agent output

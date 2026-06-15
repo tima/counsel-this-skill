@@ -105,6 +105,30 @@ Council justified when ALL of these true:
 
 ---
 
+## Quick Mode (--quick flag)
+
+For **medium-stakes** decisions that benefit from multiple perspectives but don't warrant full council:
+
+**Use --quick when:**
+- [ ] Medium stakes (important but not critical path)
+- [ ] Genuine trade-offs
+- [ ] Sufficient context
+- [ ] Less analysis time available
+
+**Examples:** Refactor now vs later, which conference to sponsor, sprint planning restructure
+
+**Changes with --quick:**
+- **3 agents instead of 5** (question-type adaptive):
+  - Technical: Operator + Researcher + Sceptic
+  - Strategic: Strategist + Researcher + Operator
+  - Process/Product: Operator + Strategist + Creative
+- **No cross-examination** (already removed from full mode)
+- **Simpler synthesis** (equal weighting, faster)
+
+**Usage:** `/council-this --quick <question>`
+
+---
+
 ## Process
 
 ### Step 0: Anti-Pattern Check
@@ -213,9 +237,18 @@ Which approach?
 
 ---
 
-### Step 3: Spawn 5 Council Members (Parallel)
+### Step 3: Spawn Council Members (Parallel)
 
-**CRITICAL:** Launch all 5 in SINGLE message with multiple Agent tool calls.
+**Agent selection:**
+
+**Full mode (default):** All 5 agents (Researcher, Sceptic, Strategist, Operator, Creative)
+
+**Quick mode (--quick flag):** 3 agents based on question type:
+- Technical: Operator + Researcher + Sceptic
+- Strategic: Strategist + Researcher + Operator
+- Process/Product: Operator + Strategist + Creative
+
+**CRITICAL:** Launch all selected agents in SINGLE message with multiple Agent tool calls.
 
 **Required output format from each agent:**
 
@@ -260,6 +293,8 @@ Context: [USER'S CONTEXT]
 ```
 You are a constructive sceptic stress-testing this decision.
 
+Your role is ONLY risks, downsides, and failure modes. DO NOT provide solutions or alternatives - that's for other council members. Focus exclusively on what could go wrong.
+
 Your job: What could go wrong? What's overlooked? What's strongest case AGAINST leading option?
 
 [IF TECHNICAL]: Emphasize technical debt, migration risks, learning curve, operational complexity, failure modes.
@@ -283,6 +318,8 @@ Context: [USER'S CONTEXT]
 **3. The Strategist**
 ```
 You are a long-term strategist zooming out.
+
+Your role is ONLY long-term consequences and strategic positioning. DO NOT focus on immediate execution details - that's for the Operator. Think years ahead, not weeks.
 
 Your job: How does this look in 12 months? 3 years? Compounding effects (positive/negative)? Highest-leverage move?
 
@@ -308,6 +345,8 @@ Context: [USER'S CONTEXT]
 ```
 You are a practical operator focused on execution.
 
+Your role is ONLY practical implementation and execution. DO NOT theorize about benefits or long-term vision - focus on the mechanics of getting this done.
+
 Your job: What does implementation actually look like? Real blockers? Cost in time/money/focus? Fastest path to result?
 
 [IF TECHNICAL]: Emphasize implementation timeline, team expertise required, tooling ecosystem, debugging complexity, maintenance burden.
@@ -331,6 +370,8 @@ Context: [USER'S CONTEXT]
 **5. The Creative**
 ```
 You are a lateral thinker finding unconventional options.
+
+Your role is ONLY unconventional alternatives and reframes. DO NOT analyze conventional approaches - the other agents cover those. Find the option nobody else is considering.
 
 Your job: Third path? Reframe? Unconventional approach sidestepping original tension?
 
@@ -358,18 +399,20 @@ Context: [USER'S CONTEXT]
 
 **Extract and validate each agent response:**
 
-Regex pattern:
-```
-VERDICT:\s*(.+?)
-ANALYSIS:
-1\.\s*(.+?)
-2\.\s*(.+?)
-3\.\s*(.+?)
-```
+**Fuzzy verdict extraction** (accept any of these):
+- "VERDICT:", "Verdict:", "CONCLUSION:", "Conclusion:", "ASSESSMENT:", "Assessment:", "My verdict:", "Key finding:"
+- Fallback: Extract first 1-2 sentences if no header found
+
+**Fuzzy analysis extraction** (accept any of these):
+- "ANALYSIS:" with numbered list (1. 2. 3.)
+- Plain numbered list without header (1. 2. 3.)
+- Lettered list (a. b. c.)
+- Bulleted list (-, *, bullets)
+- Fallback: Extract first 3 substantial sentences/paragraphs
 
 **Validation rules:**
-- VERDICT: Required, non-empty, 10+ chars
-- Each ANALYSIS point: Required, non-empty, 20+ chars
+- Verdict content exists (not empty)
+- 3 analysis points exist (not empty)
 
 **If ANY agent fails validation:**
 
@@ -480,6 +523,16 @@ Context completeness: [Complete/Sufficient/Insufficient]
 **Reversal conditions:** [When to reconsider]
 ```
 
+**Step 5.5: Validate Synthesis**
+
+After generating synthesis, check required elements:
+- [ ] BLUF present (2-4 sentences)
+- [ ] Specific action stated
+- [ ] Success criteria defined
+- [ ] Reversal conditions stated
+
+If missing any: Error with specific missing element, regenerate synthesis.
+
 ---
 
 ### Step 6: Get Timestamp
@@ -522,7 +575,6 @@ date -u +"%b-%d-%Y %H:%M GMT"
 2. [Point 2]
 3. [Point 3]
 
-**Challenged by Sceptic:** [Challenge response]
 
 ### The Sceptic
 **Role:** Constructive critic
@@ -534,7 +586,6 @@ date -u +"%b-%d-%Y %H:%M GMT"
 2. [Point 2]
 3. [Point 3]
 
-**Challenged by Creative:** [Challenge response]
 
 ### The Strategist
 **Role:** Long-term thinker
@@ -546,7 +597,6 @@ date -u +"%b-%d-%Y %H:%M GMT"
 2. [Point 2]
 3. [Point 3]
 
-**Challenged by Operator:** [Challenge response]
 
 ### The Operator
 **Role:** Execution expert
@@ -558,7 +608,6 @@ date -u +"%b-%d-%Y %H:%M GMT"
 2. [Point 2]
 3. [Point 3]
 
-**Challenged by Strategist:** [Challenge response]
 
 ### The Creative
 **Role:** Lateral thinker
@@ -570,20 +619,6 @@ date -u +"%b-%d-%Y %H:%M GMT"
 2. [Point 2]
 3. [Point 3]
 
-**Challenged by Researcher:** [Challenge response]
-
-## Cross-Examination Summary
-
-**Key tensions identified:**
-- [Tension 1 between perspectives]
-- [Tension 2]
-
-**Points of agreement despite challenge:**
-- [Agreement 1]
-- [Agreement 2]
-
-**Unresolved contradictions:**
-- [Contradiction requiring decision]
 
 ---
 
