@@ -96,18 +96,6 @@ Verify: `/council-this --help`
 - [DESIGN.md](DESIGN.md) - Design philosophy and principles
 - [DEVELOPMENT.md](DEVELOPMENT.md) - TDD methodology and testing
 
-## Contributing
-
-Follow TDD methodology:
-
-1. Create baseline test scenario (pressure test without skill)
-2. Document failure (what agents naturally do wrong)
-3. Implement fix in SKILL.md
-4. Verify compliance (re-run scenario with skill)
-5. Submit PR with test scenario + verification results
-
-See [DEVELOPMENT.md](DEVELOPMENT.md) for details.
-
 ## Credits
 
 Original concept by [Eliot Prince](https://github.com/eliotcowley). TDD implementation by Claude Sonnet 4.5 with [@tima](https://github.com/tima).
