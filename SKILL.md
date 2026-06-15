@@ -1,13 +1,13 @@
 ---
 name: council-this
-description: Use for HIGH-STAKES decisions with genuine trade-offs, sufficient context, and time for 30-45min analysis. SKIP for obvious choices, low-stakes, emergencies, or insufficient context - your baseline judgment is already correct for those.
+description: Use for HIGH-STAKES decisions with genuine trade-offs and sufficient context. SKIP for obvious choices, low-stakes, emergencies, or insufficient context - your baseline judgment is already correct for those.
 ---
 
 # Council-This — Multi-Persona Decision Analysis
 
 HIGH-IMPACT POWER TOOL for complex decisions requiring multi-perspective stress-testing.
 
-30-45 minute analysis time. Use sparingly. Your default judgment handles most decisions correctly.
+Council analysis requires substantial time. Use sparingly. Your default judgment handles most decisions correctly.
 
 ## When NOT to Use (Check First)
 
@@ -29,13 +29,13 @@ HIGH-IMPACT POWER TOOL for complex decisions requiring multi-perspective stress-
 
 ### 2. Low Stakes (Easy to Reverse)
 - Naming, formatting, minor code decisions
-- Internal-only with <10 usage points
-- 1-day reversal time, <$1000 cost
+- Internal-only with few usage points
+- Easy to reverse quickly
 - Tool choice with trivial migration
 
-**Detection:** "How long to undo?" If <1 day + <$1000 -> SKIP COUNCIL
+**Detection:** "How long to undo?" If easy and quick to reverse -> SKIP COUNCIL
 
-**Why:** Council overhead (30-45min) exceeds reversal cost.
+**Why:** Council overhead exceeds reversal cost.
 
 **Instead:** Pick reasonable option, iterate.
 
@@ -59,13 +59,13 @@ HIGH-IMPACT POWER TOOL for complex decisions requiring multi-perspective stress-
 
 ---
 
-### 4. Emergency (Decision Needed <30min)
+### 4. Emergency (Decision Needed Immediately)
 - Production outage
 - Revenue-critical deadline
 - Security incident
-- Council takes 30-45min minimum
+- Council requires substantial analysis time
 
-**Detection:** "When decision needed?" If "now" or <30min -> SKIP COUNCIL
+**Detection:** "When decision needed?" If "now" or immediately -> SKIP COUNCIL
 
 **Why:** Emergencies need speed + reversibility, not deliberation.
 
@@ -91,10 +91,10 @@ HIGH-IMPACT POWER TOOL for complex decisions requiring multi-perspective stress-
 
 Council justified when ALL of these true:
 
-- [ ] High stakes (>1 week reversal, >$10k cost, or critical path)
+- [ ] High stakes (difficult or costly to reverse, or critical path)
 - [ ] Genuine trade-offs (multiple valid approaches, no obvious winner)
 - [ ] Sufficient context (can answer who/what/when/why/how)
-- [ ] 30-45min available for analysis
+- [ ] Substantial analysis time available
 - [ ] Open decision (not validation-seeking)
 
 **Examples:**
@@ -115,11 +115,11 @@ Council justified when ALL of these true:
 Obvious choice? (expertise asymmetry, clear winner)
   -> YES: "Obvious choice detected. [Explain]. Skip council? (y/n)"
 
-Low stakes? (easy reversal, <1 day + <$1000)
-  -> YES: "Low-stakes (<1 day reversal). Council overhead unjustified. Skip? (y/n)"
+Low stakes? (easy to reverse quickly)
+  -> YES: "Low-stakes (easy reversal). Council overhead unjustified. Skip? (y/n)"
 
-Emergency? (<30min decision time)
-  -> YES: "Emergency detected. Council takes 30-45min. Use quick framework? (y/n)"
+Emergency? (decision needed immediately)
+  -> YES: "Emergency detected. Council requires substantial time. Use quick framework? (y/n)"
 
 Insufficient context? (missing 3+ of who/what/when/why/how)
   -> YES: "Insufficient context. Need: [list]. Gather first? (y/n)"
@@ -138,51 +138,63 @@ If ANY anti-pattern detected and user declines override -> STOP, do NOT proceed 
 
 Extract question from user input.
 
+**Manual override:** If user provides `--type=technical|strategic|process`, use that classification directly.
+
 **Classify by type** (affects persona emphasis):
 
 **Technical:** architecture, database, framework, infrastructure, implementation
-- Keywords: architecture, database, framework, API, service, scalable, performant
+- Keywords: architecture, database, framework, API, service, scalable, performant, infrastructure
 - Emphasize: Operator (40%) + Researcher (30%) + Sceptic (20%)
 
 **Strategic:** business direction, market, long-term, organizational
-- Keywords: market, customer, revenue, vision, roadmap, long-term, 12 months, 3 years
+- Keywords: market, customer, revenue, vision, roadmap, long-term, 12 months, 3 years, strategic
 - Emphasize: Strategist (40%) + Researcher (30%) + Operator (20%)
 
 **Process/Product:** workflow, features, team coordination, prioritization
-- Keywords: workflow, pipeline, feature, sprint, process, organize, prioritize
+- Keywords: workflow, pipeline, feature, sprint, process, organize, prioritize, team
 - Emphasize: Operator (35%) + Strategist (25%) + Researcher (20%)
+
+**Classification confidence:**
+- High: 5+ keyword matches in one category
+- Medium: 3-4 keyword matches
+- Low: 1-2 keyword matches
+
+**If low confidence:** Ask user to confirm classification or provide --type override
+
+**If hybrid** (multiple categories score similarly): Note as hybrid, use balanced weighting across relevant perspectives
 
 ---
 
 ### Step 2: Validate Sufficient Context
 
-**Required context by question type:**
+**Required context by question type** (need 3 of 4 core items):
 
 **Technical:**
-- [ ] Problem being solved
-- [ ] Scale requirements (users, data, traffic)
-- [ ] Team expertise
-- [ ] Timeline
-- [ ] Integration requirements
+- [ ] Problem being solved (required)
+- [ ] Scale requirements (required)
+- [ ] Team expertise (required)
+- [ ] Integration requirements (required)
+- Timeline (helpful but optional)
+- Budget (helpful but optional)
 
 **Strategic:**
-- [ ] Current business state
-- [ ] Resources available (budget, people, time)
-- [ ] Success criteria
-- [ ] Constraints (market, regulatory, competitive)
-- [ ] Timeline
+- [ ] Current business state (required)
+- [ ] Resources available (required)
+- [ ] Success criteria (required)
+- [ ] Constraints (required)
+- Timeline (helpful but optional)
 
 **Process/Product:**
-- [ ] Current state
-- [ ] Pain points (specific problems)
-- [ ] Team size/structure
-- [ ] Success metrics
-- [ ] Timeline for change
+- [ ] Current state (required)
+- [ ] Pain points (required)
+- [ ] Team size/structure (required)
+- [ ] Success metrics (required)
+- Timeline (helpful but optional)
 
-**Context scoring:**
-- 0-2 items: REFUSE, require clarification
-- 3-4 items: WARN, proceed with caveats noted in report
-- 5 items: FULL CONFIDENCE
+**Context scoring** (count required items only):
+- 0-2 of 4 required: REFUSE, require clarification
+- 3 of 4 required: Proceed (sufficient context)
+- 4 of 4 required: FULL CONFIDENCE
 
 If 0-2 items:
 ```
@@ -222,7 +234,9 @@ ANALYSIS:
 ```
 You are a rigorous analyst examining this question with evidence-first thinking.
 
-Your job: What do we actually know? What assumptions are made? What's missing?
+Your role is ONLY evidence, data, and facts. DO NOT provide opinions, solutions, or recommendations - that's for other council members. Stay strictly in your lane.
+
+Your job: What do we actually know? What assumptions are made? What's missing? What does the evidence say?
 
 [IF TECHNICAL]: Emphasize evidence-based analysis of technical trade-offs, benchmarks, documentation quality, community support, proven production use.
 
@@ -377,70 +391,7 @@ C) Simplify the question
 
 ---
 
-### Step 5: Cross-Examination (Adversarial Challenges)
-
-**Replace peer review theater with direct challenges:**
-
-Spawn 5 challenge agents (parallel):
-
-**Challenge 1: Sceptic challenges Researcher**
-```
-Researcher verdict: [verdict]
-Researcher analysis:
-1. [point 1]
-2. [point 2]
-3. [point 3]
-
-Your job (Sceptic): Your analysis assumes [key assumption from Researcher]. What's the strongest evidence this assumption is WRONG?
-
-Respond (2-3 sentences): Challenge + reasoning.
-```
-
-**Challenge 2: Operator challenges Strategist**
-```
-Strategist verdict: [verdict]
-[analysis]
-
-Your job (Operator): You focus on [long-term outcome]. What specific execution blocker makes this impossible in practice?
-
-Respond (2-3 sentences).
-```
-
-**Challenge 3: Researcher challenges Creative**
-```
-Creative verdict: [verdict]
-[analysis]
-
-Your job (Researcher): Your unconventional approach of [suggestion] - what evidence exists this works at scale?
-
-Respond (2-3 sentences).
-```
-
-**Challenge 4: Strategist challenges Operator**
-```
-Operator verdict: [verdict]
-[analysis]
-
-Your job (Strategist): You emphasize [quick path]. What long-term cost are we ignoring for this short-term win?
-
-Respond (2-3 sentences).
-```
-
-**Challenge 5: Creative challenges Sceptic**
-```
-Sceptic verdict: [verdict]
-[analysis]
-
-Your job (Creative): You identify [risk]. What alternative reframing eliminates this risk entirely?
-
-Respond (2-3 sentences).
-```
-
-**Collect all 5 challenge responses.**
-
----
-
-### Step 6: Chairman Synthesis with Rubric
+### Step 5: Chairman Synthesis with Rubric
 
 **Apply decision weighting by question type:**
 
@@ -531,7 +482,7 @@ Context completeness: [Complete/Sufficient/Insufficient]
 
 ---
 
-### Step 7: Get Timestamp
+### Step 6: Get Timestamp
 
 ```bash
 date -u +"%b-%d-%Y %H:%M GMT"
@@ -539,7 +490,7 @@ date -u +"%b-%d-%Y %H:%M GMT"
 
 ---
 
-### Step 8: Format Report
+### Step 7: Format Report
 
 ```markdown
 # Council Decision Report: [QUESTION]
@@ -641,7 +592,7 @@ Claude Code | Claude [Model] | [Timestamp UTC]
 
 ---
 
-### Step 9: Generate Filename
+### Step 8: Generate Filename
 
 Pattern: `council-<descriptive-slug>-<YYYY-MM-DD>.md`
 
@@ -658,7 +609,7 @@ Examples:
 
 ---
 
-### Step 10: Write Report
+### Step 9: Write Report
 
 Use Write tool to save report to current directory.
 
