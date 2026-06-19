@@ -3,3 +3,10 @@
 
 # OS files
 .DS_Store
+
+.claude/
+*.skill
+.env
+*.key
+*.pem
+*-workspace/

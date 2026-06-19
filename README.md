@@ -79,16 +79,30 @@ See [OUTPUT.md](OUTPUT.md) for report structure details.
 ## Installation
 
 ```bash
-# Clone the repo
-git clone https://github.com/tima/counsel-this-skill.git ~/projects/counsel-this-skill
+# User scope — available in all sessions (recommended)
+npx skills add tima/counsel-this-skill -g
 
-# Create symlink (Claude Code)
-ln -sf ~/projects/counsel-this-skill ~/.claude/skills/council-this
-
-# Or for other platforms, consult their skill installation docs
+# Project scope — available in this project only
+npx skills add tima/counsel-this-skill
 ```
 
-Verify: `/council-this --help`
+Target a specific agent:
+```bash
+npx skills add tima/counsel-this-skill -g -a claude-code
+```
+
+Local development install:
+```bash
+git clone https://github.com/tima/counsel-this-skill.git ~/projects/counsel-this-skill
+ln -sf ~/projects/counsel-this-skill ~/.claude/skills/council-this
+```
+
+### Uninstall
+
+```bash
+npx skills remove council-this           # project scope
+npx skills remove council-this --global  # user scope
+```
 
 ## Documentation
 
@@ -102,4 +116,4 @@ Original concept by [Eliot Prince](https://github.com/eliotcowley). TDD implemen
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE).
