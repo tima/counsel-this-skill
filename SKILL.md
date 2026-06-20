@@ -1,6 +1,6 @@
 ---
 name: counsel-this
-description: Use for HIGH-STAKES decisions with genuine trade-offs and sufficient context. SKIP for obvious choices, low-stakes, emergencies, or insufficient context - your baseline judgment is already correct for those.
+description: "Use when faced with a high-stakes decision that has genuine trade-offs and no obvious right answer. Triggers on: 'help me decide between X and Y', 'I need a second opinion on...', 'what should I do about...', 'talk me through this decision', 'weigh the options for...'. Skip for obvious choices, low-stakes calls, emergencies, or when context is insufficient — your baseline judgment handles those correctly."
 ---
 
 # Counsel-This — Multi-Persona Decision Analysis
