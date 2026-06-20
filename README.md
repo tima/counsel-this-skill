@@ -1,4 +1,4 @@
-# council-this
+# counsel-this
 
 Multi-persona decision analysis for high-stakes choices with genuine trade-offs. Spawns expert agents to stress-test decisions from multiple perspectives, then synthesizes insights into actionable recommendations with markdown reports.
 
@@ -39,18 +39,18 @@ Your baseline judgment is already correct for these. Council adds delay without 
 ## Usage
 
 ```bash
-/council-this <question or decision>
-/council-this --quick <question>        # 3 agents for medium-stakes
-/council-this --type=technical <question>  # Manual classification override
+/counsel-this <question or decision>
+/counsel-this --quick <question>        # 3 agents for medium-stakes
+/counsel-this --type=technical <question>  # Manual classification override
 ```
 
 **Examples:**
 ```bash
-/council-this Should we adopt microservices for our monolithic app with 12 engineers, 50k users growing 20% MoM?
+/counsel-this Should we adopt microservices for our monolithic app with 12 engineers, 50k users growing 20% MoM?
 
-/council-this --quick Should we refactor the auth module now or defer to next quarter?
+/counsel-this --quick Should we refactor the auth module now or defer to next quarter?
 
-/council-this --type=strategic How should we prioritize technical debt vs new features for Series A?
+/counsel-this --type=strategic How should we prioritize technical debt vs new features for Series A?
 ```
 
 ## How It Works
@@ -94,14 +94,14 @@ npx skills add tima/counsel-this -g -a claude-code
 Local development install:
 ```bash
 git clone https://github.com/tima/counsel-this.git ~/projects/counsel-this
-ln -sf ~/projects/counsel-this ~/.claude/skills/council-this
+ln -sf ~/projects/counsel-this ~/.claude/skills/counsel-this
 ```
 
 ### Uninstall
 
 ```bash
-npx skills remove council-this           # project scope
-npx skills remove council-this --global  # user scope
+npx skills remove counsel-this           # project scope
+npx skills remove counsel-this --global  # user scope
 ```
 
 ## Documentation
