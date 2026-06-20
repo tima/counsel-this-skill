@@ -80,21 +80,21 @@ See [OUTPUT.md](OUTPUT.md) for report structure details.
 
 ```bash
 # User scope — available in all sessions (recommended)
-npx skills add tima/counsel-this-skill -g
+npx skills add tima/counsel-this -g
 
 # Project scope — available in this project only
-npx skills add tima/counsel-this-skill
+npx skills add tima/counsel-this
 ```
 
 Target a specific agent:
 ```bash
-npx skills add tima/counsel-this-skill -g -a claude-code
+npx skills add tima/counsel-this -g -a claude-code
 ```
 
 Local development install:
 ```bash
-git clone https://github.com/tima/counsel-this-skill.git ~/projects/counsel-this-skill
-ln -sf ~/projects/counsel-this-skill ~/.claude/skills/council-this
+git clone https://github.com/tima/counsel-this.git ~/projects/counsel-this
+ln -sf ~/projects/counsel-this ~/.claude/skills/council-this
 ```
 
 ### Uninstall
